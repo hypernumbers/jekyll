@@ -5,7 +5,7 @@ module Jekyll
   class Site
     attr_accessor :config, :layouts, :posts, :pages, :static_files,
                   :categories, :exclude, :include, :source, :dest, :lsi, :pygments,
-                  :permalink_style, :tags, :time, :future, :safe, :plugins, :limit_posts
+                  :permalink_style, :tags, :details, :time, :future, :safe, :plugins, :limit_posts, :debugging
 
     attr_accessor :converters, :generators
 
@@ -58,6 +58,8 @@ module Jekyll
       self.static_files    = []
       self.categories      = Hash.new { |hash, key| hash[key] = [] }
       self.tags            = Hash.new { |hash, key| hash[key] = [] }
+      self.details         = Hash.new { |hash, key| hash[key] = [] }
+      self.debugging       = "nothing here..."
 
       if !self.limit_posts.nil? && self.limit_posts < 1
         raise ArgumentError, "Limit posts must be nil or >= 1"
@@ -169,6 +171,15 @@ module Jekyll
             self.posts << post
             post.categories.each { |c| self.categories[c] << post }
             post.tags.each { |c| self.tags[c] << post }
+            unless post.details.nil?
+              post.details.each_key do |key|
+                unless self.details.has_key?(key)
+                  self.details[key] = Hash.new { |hash, key| hash[key] = [] }
+                end
+                val = post.details[key]
+                self.details[key][val] << post
+              end
+           end
           end
         end
       end
@@ -299,6 +310,8 @@ module Jekyll
           "pages"      => self.pages,
           "html_pages" => self.pages.reject { |page| !page.html? },
           "categories" => post_attr_hash('categories'),
+          "details"    => self.details,
+          "debugging"  => self.debugging,
           "tags"       => post_attr_hash('tags')})}
     end
 

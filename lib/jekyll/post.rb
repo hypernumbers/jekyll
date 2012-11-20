@@ -20,7 +20,7 @@ module Jekyll
 
     attr_accessor :site
     attr_accessor :data, :content, :output, :ext
-    attr_accessor :date, :slug, :published, :tags, :categories
+    attr_accessor :date, :slug, :published, :tags, :categories, :details
 
     attr_reader :name
 
@@ -52,6 +52,8 @@ module Jekyll
       else
         self.published = true
       end
+
+      self.details = self.data['details']
 
       self.tags = self.data.pluralized_array("tag", "tags")
 
@@ -190,7 +192,7 @@ module Jekyll
 
       do_layout(payload, layouts)
     end
-    
+
     # Obtain destination path.
     #   +dest+ is the String path to the destination dir
     #
@@ -227,6 +229,7 @@ module Jekyll
         "next"       => self.next,
         "previous"   => self.previous,
         "tags"       => self.tags,
+        "details"    => self.details,
         "content"    => self.content })
     end
 
