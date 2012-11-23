@@ -175,7 +175,7 @@ CONTENT
     #    assert_match %r{<em>FIGHT!</em>}, @result
     #    assert_match %r{<em>FINISH HIM</em>}, @result
     #  end
-    end
+    #end
   end
 
   context "simple page with post linking" do
